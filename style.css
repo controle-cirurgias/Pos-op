@@ -84,8 +84,19 @@ body { margin: 0; }
 .checkbox.checked { font-weight: 700; }
 @media print {
   .no-print { display: none !important; }
-  .print-root { background: white; padding: 0; }
-  .doc-page { box-shadow: none; margin: 0; page-break-after: always; width: 100%; }
+  .print-root { background: white; padding: 0; margin: 0; }
+  @page { size: A4; margin: 12mm; }
+  .doc-page {
+    box-shadow: none;
+    margin: 0;
+    width: auto;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+  .doc-page:last-child { page-break-after: auto; }
 }
 @media (max-width: 600px) {
   .field-grid { grid-template-columns: 1fr; }
