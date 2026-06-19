@@ -230,7 +230,7 @@ function renderForm(root) {
   const secB1 = el("section", { class: "form-section" });
   const toggleRow = el("div", { class: "toggle-row" }, [
     el("div", {}, [
-      el("h2", { class: "section-title" }, "Receituário Amarelo B1"),
+      el("h2", { class: "section-title" }, "Receituário Amarelo"),
       el("p", { class: "section-hint" }, "Para codeína/opioides (ex: PACO). Ative se este paciente precisar."),
     ]),
     switchToggle(state.usarB1, (checked) => { state.usarB1 = checked; renderForm(root); }),
@@ -495,14 +495,14 @@ function renderPrintMode(root) {
 
   if (state.usarB1) {
     printRoot.appendChild(receituarioPage({
-      tipo: "RECEITUÁRIO DE CONTROLE ESPECIAL — TIPO B1",
-      subtitulo: "Portaria SVS/MS nº 344/98 | Lista B1 (Opioides) — 1ª Via: Farmácia | 2ª Via: Paciente",
+      tipo: "RECEITUÁRIO DE CONTROLE ESPECIAL",
+      subtitulo: "Portaria SVS/MS nº 344/98 — 1ª Via: Farmácia | 2ª Via: Paciente",
       cor: "#7D6608", via: "1ª", meds: [state.medPaco],
       nomePaciente: state.nomePaciente, data: state.dataDocumento,
     }));
     printRoot.appendChild(receituarioPage({
-      tipo: "RECEITUÁRIO DE CONTROLE ESPECIAL — TIPO B1",
-      subtitulo: "Portaria SVS/MS nº 344/98 | Lista B1 (Opioides) — 1ª Via: Farmácia | 2ª Via: Paciente",
+      tipo: "RECEITUÁRIO DE CONTROLE ESPECIAL",
+      subtitulo: "Portaria SVS/MS nº 344/98 — 1ª Via: Farmácia | 2ª Via: Paciente",
       cor: "#7D6608", via: "2ª", meds: [state.medPaco],
       nomePaciente: state.nomePaciente, data: state.dataDocumento,
     }));
