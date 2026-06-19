@@ -1,12 +1,12 @@
-const CACHE_NAME = "pos-operatorio-v1";
+const CACHE_NAME = "pos-operatorio-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./app.js",
+  "./style.css",
   "./manifest.json",
-  "https://unpkg.com/react@18/umd/react.production.min.js",
-  "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
-  "https://unpkg.com/@babel/standalone/babel.min.js",
+  "./icon-192.png",
+  "./icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -31,7 +31,6 @@ self.addEventListener("fetch", (event) => {
       if (cached) return cached;
       return fetch(event.request)
         .then((response) => {
-          // Salva no cache para uso offline futuro
           if (response && response.status === 200) {
             const responseClone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));

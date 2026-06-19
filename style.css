@@ -1,0 +1,93 @@
+* { box-sizing: border-box; }
+body { margin: 0; }
+.app-root { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F4F6F8; min-height: 100vh; color: #1A2330; }
+.app-header { background: #1A5276; color: white; padding: 24px 20px; text-align: center; }
+.app-header-title { font-size: 22px; font-weight: 700; letter-spacing: 0.3px; }
+.app-header-subtitle { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.form-container { max-width: 640px; margin: 0 auto; padding: 20px 16px 110px; }
+.form-section { background: white; border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.section-title { font-size: 17px; font-weight: 700; margin: 0 0 4px; color: #1A2330; }
+.section-hint { font-size: 13px; color: #6B7785; margin: 0 0 16px; }
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.field-wide { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.field-grid .field { margin-bottom: 0; }
+.field-label { font-size: 13px; font-weight: 600; color: #4A5563; }
+.field-input { border: 1.5px solid #DDE3E8; border-radius: 9px; padding: 11px 12px; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.15s; width: 100%; }
+.field-input:focus { border-color: #1A5276; }
+.field-textarea { resize: vertical; min-height: 60px; }
+.field-date { appearance: none; -webkit-appearance: none; }
+.radio-group { display: flex; gap: 10px; }
+.radio-pill { border: 1.5px solid #DDE3E8; border-radius: 20px; padding: 9px 18px; font-size: 14px; font-weight: 600; color: #4A5563; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.radio-pill.active { background: #1A5276; color: white; border-color: #1A5276; }
+.med-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.med-card { border: 1.5px solid #E5E9EC; border-radius: 10px; padding: 12px; background: #FAFBFC; }
+.med-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.med-number { width: 22px; height: 22px; background: #1A5276; color: white; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.btn-icon-remove { background: none; border: none; color: #C0392B; font-size: 16px; cursor: pointer; padding: 4px; }
+.med-input { width: 100%; border: 1px solid #DDE3E8; border-radius: 7px; padding: 8px 10px; font-size: 14px; margin-bottom: 6px; font-family: inherit; }
+.med-input-name { font-weight: 600; }
+.med-input:last-child { margin-bottom: 0; }
+.btn { border: none; border-radius: 10px; padding: 11px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-add { background: #EAF0FB; color: #1A5276; width: 100%; }
+.btn-primary { background: #1A5276; color: white; }
+.btn-primary[disabled] { background: #B8C4CC; cursor: not-allowed; }
+.btn-secondary { background: #E5E9EC; color: #1A2330; }
+.btn-large { width: 100%; padding: 15px; font-size: 16px; }
+.toggle-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.switch { position: relative; display: inline-block; width: 48px; height: 28px; flex-shrink: 0; cursor: pointer; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-slider { position: absolute; cursor: pointer; inset: 0; background-color: #DDE3E8; border-radius: 28px; transition: 0.2s; }
+.switch-slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: 0.2s; }
+.switch input:checked + .switch-slider { background-color: #1A5276; }
+.switch input:checked + .switch-slider:before { transform: translateX(20px); }
+.action-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 14px 16px; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 8px; align-items: stretch; }
+.warning-text { font-size: 13px; color: #C0392B; text-align: center; }
+.print-root { background: #E8EAED; min-height: 100vh; padding: 20px 0; }
+.print-toolbar { max-width: 720px; margin: 0 auto 16px; display: flex; gap: 10px; padding: 0 16px; }
+.print-toolbar .btn { flex: 1; }
+.doc-page { width: 720px; min-height: 980px; background: white; margin: 0 auto 24px; padding: 40px 48px; box-shadow: 0 1px 6px rgba(0,0,0,0.15); font-family: Arial, sans-serif; color: #111; font-size: 14px; }
+.doc-header { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+.doc-hospital-nome { font-weight: 700; font-size: 16px; }
+.doc-hospital-end { font-size: 11px; color: #555; margin-top: 2px; }
+.doc-divider { border-bottom: 1px solid #ccc; margin: 14px 0; }
+.doc-titulo { text-align: center; font-size: 19px; font-weight: 700; margin: 10px 0 4px; }
+.doc-subtitulo { text-align: center; font-size: 12px; color: #888; margin: 0 0 6px; }
+.paciente-data-row { display: flex; border: 1px solid #999; border-radius: 2px; margin: 14px 0; }
+.paciente-data-cell { flex: 1; padding: 10px 12px; border-right: 1px solid #999; font-size: 14px; }
+.paciente-data-cell:last-child { border-right: none; }
+.placeholder-text { color: #999; }
+.prescricao-list { margin: 16px 0; }
+.prescricao-item { margin-bottom: 14px; }
+.prescricao-nome { font-size: 15px; }
+.prescricao-qtd { color: #444; font-size: 13px; font-weight: 400; }
+.prescricao-pos { font-style: italic; color: #333; font-size: 13px; margin-left: 22px; margin-top: 2px; }
+.assinatura { text-align: center; margin: 40px 0 0; width: 280px; margin-left: auto; }
+.assinatura-linha { border-top: 1px solid #333; margin-bottom: 6px; }
+.assinatura-nome { font-weight: 700; font-size: 13px; }
+.assinatura-crm { font-size: 11px; color: #555; }
+.caixa-farm { border: 1px solid #999; margin-top: 20px; font-size: 12px; }
+.caixa-farm-titulo { background: #e0e0e0; text-align: center; font-weight: 700; padding: 6px; border-bottom: 1px solid #999; font-size: 12px; }
+.caixa-farm-row { display: flex; border-bottom: 1px solid #999; }
+.caixa-farm-row:last-child { border-bottom: none; }
+.caixa-farm-cell { flex: 1; padding: 6px 10px; border-right: 1px solid #999; }
+.caixa-farm-cell:last-child { border-right: none; }
+.atestado-texto { font-size: 14px; line-height: 1.8; margin: 14px 0; }
+.campo-linha { margin: 14px 0; font-size: 14px; border-bottom: 1px solid #999; padding-bottom: 8px; }
+.campo-bloco { margin: 14px 0; font-size: 14px; }
+.campo-bloco-linha { border-bottom: 1px solid #999; padding: 8px 0 4px; min-height: 20px; }
+.campo-bloco-linha-vazia { border-bottom: 1px solid #999; padding: 12px 0; }
+.orientacoes-titulo { font-weight: 700; margin: 18px 0 8px; font-size: 14px; }
+.orientacoes-list { padding-left: 20px; font-size: 14px; line-height: 1.7; }
+.orientacoes-list li { margin-bottom: 10px; }
+.checkbox { font-size: 15px; }
+.checkbox.checked { font-weight: 700; }
+@media print {
+  .no-print { display: none !important; }
+  .print-root { background: white; padding: 0; }
+  .doc-page { box-shadow: none; margin: 0; page-break-after: always; width: 100%; }
+}
+@media (max-width: 600px) {
+  .field-grid { grid-template-columns: 1fr; }
+  .doc-page { width: 100%; padding: 24px 20px; }
+}
