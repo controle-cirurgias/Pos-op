@@ -28,7 +28,7 @@ const state = {
   medsBranco: MEDS_BRANCO_PADRAO.map((m) => ({ ...m })),
   usarB1: false,
   medPaco: {
-    nome: "PACO (Paracetamol 325mg + Codeína 30mg)",
+    nome: "PACO (Paracetamol 500mg + Codeína 30mg)",
     qtd: "1 caixa",
     pos: "Tomar 1 comprimido de 6/6h apenas se dor forte",
   },
