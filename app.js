@@ -15,11 +15,31 @@ const MEDS_BRANCO_PADRAO = [
   { nome: "Vonau 4mg (Ondansetrona)", qtd: "1 caixa", pos: "Tomar 1 comprimido de 6/6h se náuseas ou vômitos" },
 ];
 
+const CIRURGIAS_PADRAO = [
+  { nome: "Colecistectomia Videolaparoscópica", cid: "K80.2" },
+  { nome: "Colecistectomia", cid: "K80.2" },
+  { nome: "Hernioplastia inguinal esquerda", cid: "K40.9" },
+  { nome: "Hernioplastia inguinal direita", cid: "K40.9" },
+  { nome: "Hernioplastia incisional", cid: "K43" },
+  { nome: "Hernioplastia umbilical", cid: "K42" },
+  { nome: "Hernioplastia epigástrica", cid: "K43" },
+  { nome: "Laqueadura", cid: "Z30.2" },
+  { nome: "Hemorroidectomia", cid: "I84" },
+  { nome: "Postectomia", cid: "N47" },
+  { nome: "Extirpação de lesão de pele e subcutâneo", cid: "L98.9" },
+  { nome: "Exérese de cisto pilonidal", cid: "L05" },
+  { nome: "Cirurgia de hidrocele", cid: "N43" },
+  { nome: "Cirurgia de varicocele", cid: "I86.1" },
+  { nome: "Vasectomia", cid: "Z30.2" },
+  { nome: "Fistulectomia anal", cid: "K60.5" },
+];
+
 // ---------- Estado global ----------
 const state = {
   nomePaciente: "",
   dataDocumento: "",
   cirurgia: "",
+  cirurgiaOutraTexto: "",
   diasRepouso: "",
   cid: "",
   observacoesAtestado: "",
@@ -154,15 +174,52 @@ function renderForm(root) {
   ]);
   gridRow1.appendChild(dataField);
 
-  const gridRow2 = el("div", { class: "field-grid" }, [
-    fieldInput({
-      label: "Cirurgia realizada",
-      value: state.cirurgia,
-      onInput: (v) => { state.cirurgia = v; },
-      placeholder: "Ex: Apendicectomia",
-      wide: true,
-    }),
-  ]);
+  const usandoOutra = state.cirurgia === "__outra__";
+
+  const selectOptions = [
+    el("option", { value: "" }, "— Selecione —"),
+    ...CIRURGIAS_PADRAO.map((c) => el("option", { value: c.nome, ...(state.cirurgia === c.nome ? { selected: "selected" } : {}) }, c.nome)),
+    el("option", { value: "__outra__", ...(usandoOutra ? { selected: "selected" } : {}) }, "Outra cirurgia..."),
+  ];
+
+  const cirurgiaSelect = el("select", {
+    class: "field-input",
+    onchange: (e) => {
+      const val = e.target.value;
+      state.cirurgia = val;
+      if (val === "__outra__") {
+        state.cirurgiaOutraTexto = state.cirurgiaOutraTexto || "";
+      } else {
+        const match = CIRURGIAS_PADRAO.find((c) => c.nome === val);
+        if (match) state.cid = match.cid;
+      }
+      renderForm(root);
+    },
+  }, selectOptions);
+
+  const gridRow2Children = [
+    el("label", { class: "field field-wide" }, [
+      el("span", { class: "field-label" }, "Cirurgia realizada"),
+      cirurgiaSelect,
+    ]),
+  ];
+
+  if (usandoOutra) {
+    gridRow2Children.push(
+      el("label", { class: "field field-wide" }, [
+        el("span", { class: "field-label" }, "Nome da cirurgia (digite)"),
+        el("input", {
+          type: "text",
+          class: "field-input",
+          placeholder: "Digite o nome da cirurgia",
+          value: state.cirurgiaOutraTexto || "",
+          oninput: (e) => { state.cirurgiaOutraTexto = e.target.value; },
+        }),
+      ])
+    );
+  }
+
+  const gridRow2 = el("div", { class: "field-grid" }, gridRow2Children);
 
   const gridRow3 = el("div", { class: "field-grid" }, [
     fieldInput({
@@ -466,6 +523,8 @@ function orientacoesPage({ nomePaciente, cirurgia, data, diasRepouso, dietaOpcao
 function renderPrintMode(root) {
   root.innerHTML = "";
 
+  const cirurgiaFinal = state.cirurgia === "__outra__" ? (state.cirurgiaOutraTexto || "") : state.cirurgia;
+
   const toolbar = el("div", { class: "print-toolbar no-print" }, [
     el("button", {
       class: "btn btn-secondary",
@@ -511,17 +570,17 @@ function renderPrintMode(root) {
 
   printRoot.appendChild(atestadoPage({
     tituloVia: "ATESTADO MÉDICO",
-    nomePaciente: state.nomePaciente, cirurgia: state.cirurgia, data: state.dataDocumento,
+    nomePaciente: state.nomePaciente, cirurgia: cirurgiaFinal, data: state.dataDocumento,
     diasRepouso: state.diasRepouso, cid: state.cid, observacoes: state.observacoesAtestado,
   }));
   printRoot.appendChild(atestadoPage({
     tituloVia: "ATESTADO MÉDICO — PERÍCIA INSS",
-    nomePaciente: state.nomePaciente, cirurgia: state.cirurgia, data: state.dataDocumento,
+    nomePaciente: state.nomePaciente, cirurgia: cirurgiaFinal, data: state.dataDocumento,
     diasRepouso: state.diasRepouso, cid: state.cid, observacoes: state.observacoesAtestado,
   }));
 
   printRoot.appendChild(orientacoesPage({
-    nomePaciente: state.nomePaciente, cirurgia: state.cirurgia, data: state.dataDocumento,
+    nomePaciente: state.nomePaciente, cirurgia: cirurgiaFinal, data: state.dataDocumento,
     diasRepouso: state.diasRepouso, dietaOpcao: state.dietaOpcao, observacoes: state.observacoesOrientacoes,
   }));
 
