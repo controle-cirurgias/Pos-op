@@ -198,6 +198,7 @@ function renderForm(root) {
     el("div", { class: "radio-group" }, [
       radioPill("3 dias", state.dietaOpcao === "3", () => { state.dietaOpcao = "3"; renderForm(root); }),
       radioPill("20 dias", state.dietaOpcao === "20", () => { state.dietaOpcao = "20"; renderForm(root); }),
+      radioPill("Livre", state.dietaOpcao === "livre", () => { state.dietaOpcao = "livre"; renderForm(root); }),
     ]),
   ]);
 
@@ -421,8 +422,11 @@ function orientacoesPage({ nomePaciente, cirurgia, data, diasRepouso, dietaOpcao
     ]);
   }
 
-  const check20 = el("span", { class: "checkbox" + (dietaOpcao === "20" ? " checked" : "") }, "☐");
-  const check3 = el("span", { class: "checkbox" + (dietaOpcao === "3" ? " checked" : "") }, "☐");
+  function dietaTexto(opcao) {
+    if (opcao === "20") return "Dieta leve sem comidas gordurosas ou pesadas por 20 dias.";
+    if (opcao === "livre") return "Dieta livre.";
+    return "Dieta leve sem comidas gordurosas ou pesadas por 3 dias.";
+  }
 
   const lista = el("ol", { class: "orientacoes-list" }, [
     el("li", {}, [
@@ -430,10 +434,7 @@ function orientacoesPage({ nomePaciente, cirurgia, data, diasRepouso, dietaOpcao
       el("strong", {}, diasRepouso || "______"),
       txt(" dias (andar de moto e bicicleta é considerado atividade física; dirigir carro liberado após 7 dias)."),
     ]),
-    el("li", {}, [
-      txt("Dieta leve sem comidas gordurosas ou pesadas: "),
-      check20, txt(" 20 dias   "), check3, txt(" 3 dias"),
-    ]),
+    el("li", {}, dietaTexto(dietaOpcao)),
     el("li", {}, "Curativos diários."),
     el("li", {}, "Fazer gelo local por 10min, 3x ao dia, nos primeiros 3 dias."),
     el("li", {}, "Em caso de febre, sangramento, dor intensa ou dúvidas, entrar em contato com o hospital ou procurar o pronto-socorro se necessário."),
