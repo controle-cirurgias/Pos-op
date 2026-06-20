@@ -1,4 +1,4 @@
-const CACHE_NAME = "pos-operatorio-v3";
+const CACHE_NAME = "pos-operatorio-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -25,19 +25,19 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// Estratégia: REDE PRIMEIRO, cache como reserva (offline).
+// Isso garante que, sempre que houver internet, a versão mais nova é usada
+// e o cache é atualizado. Sem internet, cai automaticamente no cache salvo.
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200) {
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
-          }
-          return response;
-        })
-        .catch(() => caches.match("./index.html"));
-    })
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
   );
 });
