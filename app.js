@@ -493,6 +493,7 @@ function orientacoesPage({ nomePaciente, cirurgia, data, diasRepouso, dietaOpcao
     ]),
     el("li", {}, dietaTexto(dietaOpcao)),
     el("li", {}, "Curativos diários."),
+    el("li", {}, "Retirar pontos em 14 dias no posto de saúde."),
     el("li", {}, "Fazer gelo local por 10min, 3x ao dia, nos primeiros 3 dias."),
     el("li", {}, "Em caso de febre, sangramento, dor intensa ou dúvidas, entrar em contato com o hospital ou procurar o pronto-socorro se necessário."),
     el("li", {}, "Agendar retorno no hospital em: ____/____/________ às ______h."),
