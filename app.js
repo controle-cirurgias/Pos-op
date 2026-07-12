@@ -514,7 +514,6 @@ function figuraBanhoAssento() {
       alt: "Ilustração de banho de assento",
       class: "figura-banho-img",
     }),
-    el("div", { class: "figura-banho-legenda" }, "Banho de assento com água morna, 2-3x ao dia"),
   ]);
 }
 
