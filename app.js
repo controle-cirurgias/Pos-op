@@ -2,7 +2,7 @@
    Pós-Operatório — App vanilla JS (sem React, sem build, sem CDN)
    =========================================================== */
 
-const HOSPITAL_NOME = "HOSPITAL NOSSA SENHORA DA PENHA";
+const HOSPITAL_NOME = "HOSPITAL DE PENHA";
 const HOSPITAL_END = "Rua Calisto Luiz Honório, s/nº — Fone: (47) 3345-6756 — CEP 88.385-000 — Penha/SC";
 const MEDICO = "Dr. Mateus Rover Cipili";
 const CRM = "CRM/SC 23793";
@@ -14,6 +14,15 @@ const MEDS_BRANCO_PADRAO = [
   { nome: "Dipirona 1g  ou  Paracetamol 750mg", qtd: "1 caixa", pos: "Tomar 1 comprimido de 6/6h se dor ou febre" },
   { nome: "Vonau 4mg (Ondansetrona)", qtd: "1 caixa", pos: "Tomar 1 comprimido de 6/6h se náuseas ou vômitos" },
 ];
+
+const MED_NEBACETIN = { nome: "Nebacetin _______", qtd: "2 tubos", pos: "Aplicar na ferida em toda troca de curativo, diariamente" };
+
+// Medicamentos extras adicionados automaticamente à receita conforme a
+// cirurgia selecionada (além dos MEDS_BRANCO_PADRAO). Só são inseridos se
+// ainda não estiverem na lista, para não duplicar em reedições.
+const MEDS_EXTRA_POR_CIRURGIA = {
+  "Exérese de cisto pilonidal": [MED_NEBACETIN],
+};
 
 const CIRURGIAS_PADRAO = [
   { nome: "Colecistectomia Videolaparoscópica", cid: "K80.2" },
@@ -193,6 +202,11 @@ function renderForm(root) {
         const match = CIRURGIAS_PADRAO.find((c) => c.nome === val);
         if (match) state.cid = match.cid;
       }
+      const extras = MEDS_EXTRA_POR_CIRURGIA[val] || [];
+      extras.forEach((extra) => {
+        const jaExiste = state.medsBranco.some((m) => m.nome === extra.nome);
+        if (!jaExiste) state.medsBranco.push({ ...extra });
+      });
       renderForm(root);
     },
   }, selectOptions);
@@ -564,7 +578,7 @@ const ORIENTACOES_POR_CIRURGIA = {
     itemRepouso(diasRepouso, "evitar esforço físico intenso e levantamento de peso por 15 dias"),
     el("li", {}, dietaTexto(dietaOpcao)),
     el("li", {}, "Uso de cueca justa (tipo sunga) ou suspensório escrotal nos primeiros dias para maior conforto e sustentação."),
-    el("li", {}, "Fazer gelo local por 10-15min a cada 1-2h nas primeiras 48h, para ajudar a reduzir o inchaço."),
+    el("li", {}, "Fazer gelo local por 10-15min a cada 3 a 4x ao dia nas primeiras 48h, para ajudar a reduzir o inchaço."),
     el("li", {}, "Edema (inchaço) e hematoma (roxidão) escrotal são esperados nos primeiros dias e tendem a melhorar progressivamente."),
     el("li", {}, "Curativos diários."),
     el("li", {}, "Retirar pontos em 14 dias no posto de saúde, se não forem absorvíveis."),
@@ -574,10 +588,20 @@ const ORIENTACOES_POR_CIRURGIA = {
   "Exérese de cisto pilonidal": (diasRepouso, dietaOpcao) => [
     itemRepouso(diasRepouso, "evitar permanecer sentado por períodos prolongados e evitar exercícios físicos intensos por 45 dias"),
     el("li", {}, dietaTexto(dietaOpcao)),
-    el("li", {}, "Curativo diário da ferida com soro fisiológico, mantendo-a limpa e seca; higiene local no banho ou após evacuar."),
+    el("li", {}, "Curativo diário da ferida com pomada, mantendo-a limpa e seca; higiene local no banho ou após evacuar."),
     el("li", {}, "A ferida pode cicatrizar por segunda intenção (aberta), podendo haver secreção discreta; isso é esperado durante a cicatrização."),
     el("li", {}, "Preferir roupas íntimas de algodão, evitando calças e roupas muito justas na região operada."),
     el("li", {}, "Depilar a região da cicatriz por 6 meses após a cirurgia, para reduzir o risco de pelos encravados e recidiva."),
+    itemContato(),
+    itemRetorno(),
+  ],
+  "Laqueadura": (diasRepouso, dietaOpcao) => [
+    itemRepouso(diasRepouso),
+    el("li", {}, dietaTexto(dietaOpcao)),
+    el("li", {}, "Curativos diários."),
+    el("li", {}, "Retirar pontos em 14 dias no posto de saúde."),
+    el("li", {}, "Fazer gelo local por 10min, 3x ao dia, nos primeiros 3 dias."),
+    el("li", {}, "Manter métodos contraceptivos por dois meses após a cirurgia."),
     itemContato(),
     itemRetorno(),
   ],
