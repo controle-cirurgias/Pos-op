@@ -468,7 +468,101 @@ function atestadoPage({ tituloVia, nomePaciente, cirurgia, data, diasRepouso, ci
   ]);
 }
 
-function orientacoesPage({ nomePaciente, cirurgia, data, diasRepouso, dietaOpcao, observacoes }) {
+function dietaTexto(opcao) {
+  if (opcao === "20") return "Dieta leve sem comidas gordurosas ou pesadas por 20 dias.";
+  if (opcao === "livre") return "Dieta livre.";
+  return "Dieta leve sem comidas gordurosas ou pesadas por 3 dias.";
+}
+
+function itemRepouso(diasRepouso, extra) {
+  return el("li", {}, [
+    txt("Repouso relativo e afastamento de atividades físicas por "),
+    el("strong", {}, diasRepouso || "______"),
+    txt(` dias (andar de moto e bicicleta é considerado atividade física; dirigir carro liberado após 7 dias)${extra ? "; " + extra : "."}`),
+  ]);
+}
+
+// Fábricas de item: cada chamada cria um nó <li> novo. Nós de DOM não podem
+// pertencer a duas listas ao mesmo tempo (appendChild move, não clona), então
+// não reutilizamos uma única instância entre as várias listas de cirurgia.
+function itemContato() {
+  return el("li", {}, "Em caso de febre, sangramento, dor intensa ou dúvidas, entrar em contato com o hospital ou procurar o pronto-socorro se necessário.");
+}
+function itemRetorno() {
+  return el("li", {}, "Agendar retorno no hospital em: ____/____/________ às ______h.");
+}
+
+// Ilustração do banho de assento (foto ilustrativa em sitzbath.jpg).
+function figuraBanhoAssento() {
+  return el("div", { class: "figura-banho" }, [
+    el("img", {
+      src: "sitzbath.jpg",
+      alt: "Ilustração de banho de assento",
+      class: "figura-banho-img",
+    }),
+    el("div", { class: "figura-banho-legenda" }, "Banho de assento com água morna, 2-3x ao dia"),
+  ]);
+}
+
+function itemBanhoAssento() {
+  return el("li", {}, [
+    txt("Banho de assento com água morna por 10-15min, 3-4x ao dia e sempre após evacuar."),
+    figuraBanhoAssento(),
+  ]);
+}
+
+// Listas de orientações específicas por cirurgia. A chave deve bater com o
+// nome exato da cirurgia em CIRURGIAS_PADRAO. Cirurgias fora desta lista
+// (incluindo "Outra cirurgia...") usam ORIENTACOES_PADRAO.
+const ORIENTACOES_POR_CIRURGIA = {
+  "Postectomia": (diasRepouso, dietaOpcao) => [
+    itemRepouso(diasRepouso, "evitar relação sexual e masturbação por 30 dias"),
+    el("li", {}, dietaTexto(dietaOpcao)),
+    el("li", {}, "Higiene local no banho com água e sabonete neutro; secar bem após."),
+    el("li", {}, "Uso de cueca justa (tipo sunga) para melhor sustentação nos primeiros dias, se tolerado."),
+    el("li", {}, "Edema (inchaço) e hematoma (roxidão) local são esperados nos primeiros dias e tendem a melhorar progressivamente."),
+    el("li", {}, "Fazer gelo local por 10min, 3x ao dia, nos primeiros 3 dias, se houver inchaço importante."),
+    el("li", {}, "Curativos diários."),
+    el("li", {}, "Retirar pontos em 14 dias no posto de saúde, se não forem absorvíveis."),
+    itemContato(),
+    itemRetorno(),
+  ],
+  "Hemorroidectomia": (diasRepouso, dietaOpcao) => [
+    itemRepouso(diasRepouso),
+    el("li", {}, "Dieta rica em fibras (ex.: frutas com casca e bagaço, verduras, aveia, feijão, ameixa) e bastante líquido (mín. 2L de água/dia) para manter as fezes macias e evitar esforço evacuatório; usar laxante conforme orientação médica se necessário."),
+    itemBanhoAssento(),
+    el("li", {}, "Higiene local cuidadosa após cada evacuação."),
+    el("li", {}, "Dor ao evacuar nos primeiros dias é esperada; usar os analgésicos prescritos antes da evacuação, se necessário."),
+    el("li", {}, "Pequeno sangramento vivo nas primeiras evacuações pode ocorrer e é normal em pequena quantidade."),
+    el("li", {}, "Evitar prender as fezes; procurar evacuar assim que sentir vontade."),
+    itemContato(),
+    itemRetorno(),
+  ],
+  "Fistulectomia anal": (diasRepouso, dietaOpcao) => [
+    itemRepouso(diasRepouso),
+    el("li", {}, "Dieta rica em fibras (ex.: frutas com casca e bagaço, verduras, aveia, feijão, ameixa) e bastante líquido (mín. 2L de água/dia) para manter as fezes macias e evitar esforço evacuatório; usar laxante conforme orientação médica se necessário."),
+    itemBanhoAssento(),
+    el("li", {}, "Curativo diário da ferida, mantendo-a limpa e seca fora dos horários de banho de assento."),
+    el("li", {}, "A ferida cicatriza por segunda intenção (aberta), podendo haver secreção discreta; isso é esperado durante a cicatrização."),
+    el("li", {}, "Evitar prender as fezes; procurar evacuar assim que sentir vontade."),
+    itemContato(),
+    itemRetorno(),
+  ],
+};
+
+function ORIENTACOES_PADRAO(diasRepouso, dietaOpcao) {
+  return [
+    itemRepouso(diasRepouso),
+    el("li", {}, dietaTexto(dietaOpcao)),
+    el("li", {}, "Curativos diários."),
+    el("li", {}, "Retirar pontos em 14 dias no posto de saúde."),
+    el("li", {}, "Fazer gelo local por 10min, 3x ao dia, nos primeiros 3 dias."),
+    itemContato(),
+    itemRetorno(),
+  ];
+}
+
+function orientacoesPage({ nomePaciente, cirurgiaKey, cirurgia, data, diasRepouso, dietaOpcao, observacoes }) {
   const titulo = el("h1", { class: "doc-titulo" }, "ORIENTAÇÕES PÓS-OPERATÓRIAS");
   titulo.style.color = "#1A5276";
 
@@ -479,25 +573,8 @@ function orientacoesPage({ nomePaciente, cirurgia, data, diasRepouso, dietaOpcao
     ]);
   }
 
-  function dietaTexto(opcao) {
-    if (opcao === "20") return "Dieta leve sem comidas gordurosas ou pesadas por 20 dias.";
-    if (opcao === "livre") return "Dieta livre.";
-    return "Dieta leve sem comidas gordurosas ou pesadas por 3 dias.";
-  }
-
-  const lista = el("ol", { class: "orientacoes-list" }, [
-    el("li", {}, [
-      txt("Repouso relativo e afastamento de atividades físicas por "),
-      el("strong", {}, diasRepouso || "______"),
-      txt(" dias (andar de moto e bicicleta é considerado atividade física; dirigir carro liberado após 7 dias)."),
-    ]),
-    el("li", {}, dietaTexto(dietaOpcao)),
-    el("li", {}, "Curativos diários."),
-    el("li", {}, "Retirar pontos em 14 dias no posto de saúde."),
-    el("li", {}, "Fazer gelo local por 10min, 3x ao dia, nos primeiros 3 dias."),
-    el("li", {}, "Em caso de febre, sangramento, dor intensa ou dúvidas, entrar em contato com o hospital ou procurar o pronto-socorro se necessário."),
-    el("li", {}, "Agendar retorno no hospital em: ____/____/________ às ______h."),
-  ]);
+  const gerarItens = ORIENTACOES_POR_CIRURGIA[cirurgiaKey] || ORIENTACOES_PADRAO;
+  const lista = el("ol", { class: "orientacoes-list" }, gerarItens(diasRepouso, dietaOpcao));
 
   const obsBlock = el("div", { class: "campo-bloco" }, [
     el("strong", {}, "Observações:"),
@@ -581,7 +658,7 @@ function renderPrintMode(root) {
   }));
 
   printRoot.appendChild(orientacoesPage({
-    nomePaciente: state.nomePaciente, cirurgia: cirurgiaFinal, data: state.dataDocumento,
+    nomePaciente: state.nomePaciente, cirurgiaKey: state.cirurgia, cirurgia: cirurgiaFinal, data: state.dataDocumento,
     diasRepouso: state.diasRepouso, dietaOpcao: state.dietaOpcao, observacoes: state.observacoesOrientacoes,
   }));
 

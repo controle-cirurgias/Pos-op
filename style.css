@@ -80,6 +80,9 @@ body { margin: 0; }
 .orientacoes-titulo { font-weight: 700; margin: 18px 0 8px; font-size: 14px; }
 .orientacoes-list { padding-left: 20px; font-size: 14px; line-height: 1.7; }
 .orientacoes-list li { margin-bottom: 10px; }
+.figura-banho { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.figura-banho-img { display: block; width: 110px; height: auto; border-radius: 4px; }
+.figura-banho-legenda { font-size: 12px; font-style: italic; color: #555; max-width: 260px; }
 .checkbox { font-size: 15px; }
 .checkbox.checked { font-weight: 700; }
 @media print {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "pos-operatorio-v4";
+const CACHE_NAME = "pos-operatorio-v5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const ASSETS = [
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
+  "./sitzbath.jpg",
 ];
 
 self.addEventListener("install", (event) => {
