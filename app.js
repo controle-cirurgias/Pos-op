@@ -472,6 +472,8 @@ function atestadoPage({ tituloVia, nomePaciente, cirurgia, data, diasRepouso, ci
   ]);
 
   return el("div", { class: "doc-page" }, [
+    hospitalHeader(),
+    el("div", { class: "doc-divider" }),
     titulo,
     el("div", { class: "doc-divider" }),
     texto,
